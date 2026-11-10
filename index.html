@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>English Grammar Quest — 100 Points</title>
+<style>
+:root{--bg:#07111f;--panel:#101d31;--line:#29415f;--text:#f4f7fb;--muted:#aebcd0;--blue:#4ea5ff;--purple:#9b7bff;--green:#43d39e;--gold:#ffc857;--red:#ff6b7a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0,#17345a,transparent 30%),radial-gradient(circle at 90% 0,#30215d,transparent 26%),var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;min-height:100vh}button{font:inherit}
+.app{max-width:1120px;margin:auto;padding:18px}header{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:8px 0 22px}.brand{display:flex;align-items:center;gap:12px}.logo{font-size:34px}.brand h1{font-size:22px;margin:0}.brand p{margin:4px 0 0;color:var(--muted);font-size:13px}.score{background:#101d31;border:1px solid var(--line);border-radius:15px;padding:12px 16px;font-weight:900;white-space:nowrap}
+.hero,.card,.panel,.result{background:linear-gradient(145deg,rgba(21,38,64,.98),rgba(12,25,43,.98));border:1px solid var(--line);border-radius:24px;box-shadow:0 18px 50px rgba(0,0,0,.24)}
+.hero{text-align:center;padding:42px 25px}.badge{display:inline-block;background:#17375d;color:#c4e2ff;padding:8px 14px;border-radius:99px;font-size:12px;font-weight:900}.hero h2{font-size:44px;margin:17px 0 10px}.hero p{max-width:720px;margin:auto;color:var(--muted);line-height:1.6}
+.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:17px;margin-top:22px}.card{padding:24px;min-height:235px;cursor:pointer;transition:.2s;position:relative}.card:hover{transform:translateY(-4px);border-color:var(--blue)}.points{position:absolute;right:15px;top:15px;background:#091523;color:var(--gold);padding:7px 9px;border-radius:9px;font-size:11px;font-weight:900}.icon{font-size:42px}.card h3{margin:18px 0 8px;font-size:21px}.card p{color:var(--muted);line-height:1.5}.small{font-size:13px;color:#d4e5f8}
+.progress-top{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:14px;margin:22px 0 8px}.bar{height:12px;background:#091523;border-radius:12px;overflow:hidden;border:1px solid #182a40}.bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--purple),var(--green));transition:.35s}
+#game,#result{display:none}.game-head{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:14px}.game-title{font-size:25px;font-weight:900}.meta{color:var(--muted);font-size:14px;margin-top:4px}.panel{padding:28px}.num{font-size:12px;letter-spacing:1px;color:var(--blue);font-weight:900}.question{font-size:27px;font-weight:900;line-height:1.35;margin:14px 0 4px}.translation{font-size:13px;color:#9fb2ca;line-height:1.45;margin:0 0 22px;font-style:italic}.options{display:grid;grid-template-columns:1fr 1fr;gap:12px}.option,.word,.item{background:#091625;border:1px solid var(--line);color:var(--text);border-radius:15px;padding:16px;cursor:pointer;text-align:left;transition:.2s}.option:hover,.word:hover,.item:hover{border-color:var(--blue);transform:translateY(-1px)}.selected{outline:3px solid var(--blue);background:#123055}.correct{border-color:var(--green)!important;background:#10372e!important}.wrong{border-color:var(--red)!important;background:#421e2a!important}
+.wordbank,.sentence{display:flex;flex-wrap:wrap;gap:9px;padding:15px;border:1px dashed var(--line);border-radius:16px;min-height:64px}.sentence{margin-top:15px;background:#091523}.hint{font-size:14px;color:var(--muted);margin-bottom:10px}.match{display:grid;grid-template-columns:1fr 1fr;gap:16px;position:relative;align-items:start}.col{display:grid;gap:10px}.item{text-align:center;font-weight:800;position:relative;z-index:2}
+.match-wrap{position:relative;overflow:visible}.match-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible}.match-line{stroke:var(--blue);stroke-width:4;stroke-linecap:round;filter:drop-shadow(0 0 5px rgba(78,165,255,.65));animation:draw .2s ease-out}.match-line.pending{stroke:var(--gold);stroke-dasharray:8 7}.match-status{margin:10px 0 14px;font-size:13px;color:var(--muted);font-weight:700}
+@keyframes draw{from{stroke-dasharray:0 1000}to{stroke-dasharray:1000 0}}.buckets{display:grid;grid-template-columns:1fr 1fr;gap:15px}.bucket{min-height:155px;border:1px solid var(--line);border-radius:16px;padding:14px;background:#091523;cursor:pointer}.bucket h3{margin:0 0 10px}.placed{margin:7px 0;width:100%;text-align:left}.move-note{font-size:12px;color:#7f9ab8;margin-top:10px}
+.feedback{display:none;margin-top:20px;padding:16px;border-radius:15px;font-weight:900;font-size:17px}.feedback.good{display:block;background:#10372e;color:#c1ffe7}.feedback.bad{display:block;background:#421e2a;color:#ffd2d9}.actions{display:flex;justify-content:space-between;gap:12px;margin-top:22px}.btn{border:0;border-radius:14px;padding:14px 20px;background:#243955;color:#fff;font-weight:900;cursor:pointer}.btn.primary{background:linear-gradient(135deg,var(--blue),var(--purple))}.btn:disabled{opacity:.45;cursor:not-allowed}
+.result{text-align:center;padding:48px}.stars{font-size:40px}.big{font-size:76px;font-weight:1000;color:var(--gold);margin:14px}.result p{color:var(--muted);font-size:17px}.mobile-nav{display:none}
+@media(max-width:800px){body{padding-bottom:76px}.app{padding:13px}.brand h1{font-size:16px}.score{font-size:13px;padding:10px}.hero{padding:29px 16px}.hero h2{font-size:32px}.levels{grid-template-columns:1fr}.card{min-height:175px}.panel{padding:18px}.question{font-size:22px}.options,.match,.buckets{grid-template-columns:1fr}.game-head{align-items:flex-start;flex-direction:column}.mobile-nav{display:grid;grid-template-columns:repeat(3,1fr);position:fixed;bottom:0;left:0;right:0;z-index:99;background:rgba(7,17,31,.98);border-top:1px solid var(--line);padding:7px}.mobile-nav button{background:transparent;border:0;color:white;font-size:11px;font-weight:900;padding:5px;touch-action:manipulation}.mobile-nav span{display:block;font-size:20px}.actions{flex-direction:column}.actions .btn{width:100%}.big{font-size:60px}}
+
+/* ===== FULL RESPONSIVE ADAPTATION ===== */
+html{scroll-behavior:smooth}
+img,svg{max-width:100%}
+@media (min-width:1201px){
+  .app{max-width:1180px;padding:28px}
+  .hero{padding:54px 42px}
+  .panel{padding:34px}
+  .question{font-size:30px}
+}
+@media (min-width:801px) and (max-width:1200px){
+  .app{max-width:96%;padding:20px}
+  .levels{grid-template-columns:repeat(3,1fr)}
+  .question{font-size:25px}
+}
+@media (min-width:601px) and (max-width:800px){
+  .app{max-width:100%;padding:16px}
+  header{align-items:flex-start}
+  .levels{grid-template-columns:1fr 1fr}
+  .card:last-child{grid-column:1/-1}
+  .hero h2{font-size:38px}
+  .question{font-size:24px}
+  .options{grid-template-columns:1fr 1fr}
+  .match{grid-template-columns:1fr 1fr;gap:12px}
+  .item{padding:13px;font-size:14px}
+  .mobile-nav{display:grid}
+}
+@media (max-width:600px){
+  body{overflow-x:hidden}
+  .app{width:100%;padding:10px 10px 85px}
+  header{padding:4px 2px 16px;gap:8px}
+  .logo{font-size:27px}
+  .brand{gap:7px;min-width:0}
+  .brand h1{font-size:13px;white-space:normal}
+  .brand p{font-size:10px;line-height:1.3}
+  .score{font-size:11px;padding:9px 10px;border-radius:12px}
+  .hero{padding:26px 14px;border-radius:19px}
+  .hero h2{font-size:28px;line-height:1.1;margin:14px 0 10px}
+  .hero p{font-size:14px}
+  .badge{font-size:10px;padding:7px 10px}
+  .levels{grid-template-columns:1fr;gap:12px;margin-top:15px}
+  .card{min-height:auto;padding:18px;border-radius:18px}
+  .card h3{font-size:19px;margin:12px 0 6px}
+  .card p{font-size:13px;margin:0 0 8px}
+  .icon{font-size:34px}
+  .points{font-size:10px;padding:6px 8px}
+  .progress-top{font-size:12px;margin:15px 0 7px}
+  .game-head{gap:9px;margin-bottom:10px}
+  .game-title{font-size:20px}
+  .meta{font-size:12px}
+  #homeBtn{width:100%}
+  .panel{padding:15px;border-radius:19px}
+  .num{font-size:10px}
+  .question{font-size:21px;line-height:1.3;margin-top:10px}
+  .translation{font-size:11px;margin-bottom:17px}
+  .hint{font-size:12px}
+  .move-note{font-size:11px}
+  .options{grid-template-columns:1fr;gap:9px}
+  .option,.word,.item{padding:13px 12px;border-radius:13px;font-size:14px;min-height:48px}
+  .wordbank,.sentence{padding:10px;gap:7px;min-height:58px}
+  .word{min-height:auto;padding:10px;font-size:13px}
+  .match-wrap{overflow:visible}
+  .match{grid-template-columns:1fr 1fr;gap:8px}
+  .col{gap:8px}
+  .match .item{padding:10px 6px;font-size:11px;min-height:48px;word-break:break-word}
+  .match-line{stroke-width:3}
+  .buckets{grid-template-columns:1fr;gap:10px}
+  .bucket{min-height:115px;padding:11px}
+  .bucket h3{font-size:15px}
+  .feedback{font-size:14px;padding:13px}
+  .actions{gap:9px;margin-top:17px}
+  .btn{padding:13px 15px;font-size:14px;min-height:48px}
+  .result{padding:32px 15px;border-radius:20px}
+  .big{font-size:52px}
+  .mobile-nav{grid-template-columns:repeat(3,1fr);gap:2px;padding:6px 4px}
+  .mobile-nav button{font-size:10px;min-height:55px}
+}
+@media (max-width:380px){
+  .brand h1{font-size:11px}
+  .brand p{display:none}
+  .score{font-size:10px;padding:8px}
+  .hero h2{font-size:24px}
+  .question{font-size:19px}
+  .match{gap:5px}
+  .match .item{font-size:10px;padding:8px 4px}
+  .option,.word,.item{font-size:13px}
+}
+@media (min-width:900px){
+  .mobile-nav{display:none!important}
+}
+@media (hover:none) and (pointer:coarse){
+  button,.card{touch-action:manipulation}
+  .card:hover{transform:none}
+  .option:hover,.word:hover,.item:hover{transform:none}
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+ <div class="brand"><div class="logo">🎮</div><div><h1>ENGLISH GRAMMAR QUEST</h1><p>Present Simple • Past Simple • Final Challenge</p></div></div>
+ <div class="score">🏆 SCORE: <span id="score">0</span>/100</div>
+</header>
+
+<section id="home">
+ <div class="hero"><div class="badge">50 QUESTIONS • 100 POINTS</div><h2>Learn. Play. Score. 🏆</h2><p>Every correct answer gives <b>+2 points</b>. A wrong answer gives <b>0 points</b> and cannot be retaken.</p></div>
+ <div class="progress-top"><span>Overall score</span><span id="homeScore">0 / 100 points</span></div><div class="bar"><div id="overall"></div></div>
+ <div class="progress-top"><span>Questions completed</span><span id="progressText">0 / 50</span></div>
+ <div class="levels">
+  <div class="card" onclick="start(0)"><div class="points">15 × 2 = 30</div><div class="icon">🟢</div><h3>Present Simple</h3><p>15 questions about routines, questions, negatives and verb forms.</p><div class="small">15 questions • 2 points each</div></div>
+  <div class="card" onclick="start(1)"><div class="points">15 × 2 = 30</div><div class="icon">🔵</div><h3>Past Simple</h3><p>15 questions about past events and regular/irregular verbs.</p><div class="small">15 questions • 2 points each</div></div>
+  <div class="card" onclick="start(2)"><div class="points">20 × 2 = 40</div><div class="icon">🟣</div><h3>Final Challenge</h3><p>20 mixed grammar challenges with different game mechanics.</p><div class="small">20 questions • 2 points each</div></div>
+ </div>
+</section>
+
+<section id="game">
+ <div class="game-head"><div><div class="game-title" id="title"></div><div class="meta" id="meta"></div></div><button class="btn" id="homeBtn" onclick="goHome()">🏠 Home</button></div>
+ <div class="bar"><div id="sectionBar"></div></div>
+ <div class="panel" id="box"></div>
+</section>
+
+<section class="result" id="result"><div class="stars">🏆 ⭐ 🏆</div><h2>English Champion!</h2><div class="big"><span id="final">0</span>/100</div><h3 id="grade"></h3><p id="resultText"></p><button class="btn primary" onclick="restart()">🔄 Start Again</button><br><br><button class="btn" onclick="goHome()">🏠 Home</button></section>
+</div>
+
+<div class="mobile-nav">
+ <button onclick="goHome()"><span>🏠</span>Home</button>
+ <button onclick="nextQuestion()"><span>➡️</span>Next</button>
+ <button onclick="finishIfDone()"><span>🏆</span>Result</button>
+</div>
+
+<script>
+const sections=[
+{title:"🟢 Present Simple",count:15,questions:[
+["choice","She ___ to university every day.","Она ___ в университет каждый день.",["go","goes","went","going"],1],
+["choice","I ___ coffee every morning.","Я ___ кофе каждое утро.",["drink","drinks","drank","drinking"],0],
+["choice","___ they play football on Fridays?","___ они играют в футбол по пятницам?",["Do","Does","Did","Are"],0],
+["choice","He ___ TV in the evening.","Он ___ телевизор вечером.",["watch","watches","watched","watching"],1],
+["build","Build the correct Present Simple sentence:","Составьте правильное предложение в Present Simple:",["every day","English","studies","She"],["She","studies","English","every day"]],
+["match","Match the subject with the correct verb form:","Соедините подлежащее с правильной формой глагола:",["I / You / We / They","He / She / It"],["plays","play"],[1,0]],
+["choice","Which sentence is correct?","Какое предложение правильное?",["She don't like tea.","She doesn't like tea.","She doesn't likes tea.","She not like tea."],1],
+["build","Build the correct question:","Составьте правильный вопрос:",["you","like","Do","music","?"],["Do","you","like","music","?"]],
+["choice","We ___ dinner at 7 p.m.","Мы ___ ужин в 7 вечера.",["have","has","had","having"],0],
+["choice","Choose the Present Simple time expression:","Выберите выражение времени для Present Simple:",["yesterday","last week","every Monday","two days ago"],2],
+["choice","My parents ___ in Kokshetau.","Мои родители ___ в Кокшетау.",["live","lives","lived","living"],0],
+["choice","___ your sister work here?","___ твоя сестра работает здесь?",["Do","Does","Did","Is"],1],
+["choice","He ___ not understand this rule.","Он ___ не понимает это правило.",["do","does","did","is"],1],
+["sort","Sort the sentences into the correct category:","Распределите предложения по правильным категориям:",["She goes to work by bus.","They don't study on Sundays."],["Positive","Negative"],[0,1]],
+["build","Build the correct sentence:","Составьте правильное предложение:",["often","books","reads","He"],["He","often","reads","books"]]
+]},
+{title:"🔵 Past Simple",count:15,questions:[
+["choice","Yesterday I ___ to the cinema.","Вчера я ___ в кино.",["go","goes","went","going"],2],
+["choice","She ___ her homework last night.","Она ___ домашнюю работу прошлой ночью.",["finish","finished","finishes","finishing"],1],
+["match","Match the verbs with their Past Simple forms:","Соедините глаголы с их формами Past Simple:",["go","see","eat","buy"],["ate","went","bought","saw"],[1,3,0,2]],
+["choice","They ___ football yesterday.","Они ___ в футбол вчера.",["play","played","plays","playing"],1],
+["build","Build the correct Past Simple sentence:","Составьте правильное предложение в Past Simple:",["to Astana","last month","We","went"],["We","went","to Astana","last month"]],
+["choice","___ you visit your grandmother yesterday?","___ ты навещал бабушку вчера?",["Do","Does","Did","Were"],2],
+["choice","He ___ breakfast this morning.","Он ___ завтрак сегодня утром.",["didn't eat","doesn't eat","don't eat","not ate"],0],
+["choice","Choose the correct sentence:","Выберите правильное предложение:",["I saw him yesterday.","I see him yesterday.","I seen him yesterday.","I was see him yesterday."],0],
+["build","Build the correct negative sentence:","Составьте правильное отрицательное предложение:",["didn't","yesterday","I","study"],["I","didn't","study","yesterday"]],
+["choice","Choose the Past Simple time expression:","Выберите выражение времени для Past Simple:",["usually","every day","last weekend","often"],2],
+["choice","My friend ___ me last night.","Мой друг ___ мне прошлой ночью.",["call","called","calls","calling"],1],
+["choice","We ___ a great film on Saturday.","Мы ___ отличный фильм в субботу.",["watch","watched","watches","watching"],1],
+["choice","She ___ her keys yesterday.","Она ___ свои ключи вчера.",["lose","lost","loses","losing"],1],
+["sort","Sort the verbs by their Past Simple form:","Распределите глаголы по типу формы Past Simple:",["played","went"],["Regular","Irregular"],[0,1]],
+["build","Build the correct question:","Составьте правильный вопрос:",["Where","did","you","go","?"],["Where","did","you","go","?"]]
+]},
+{title:"🟣 Final Challenge",count:20,questions:[
+["sort","Sort the sentences by tense:","Распределите предложения по временам:",["She works every day.","They visited us yesterday."],["Present Simple","Past Simple"],[0,1]],
+["choice","My brother ___ to school by bus every day.","Мой брат ___ в школу на автобусе каждый день.",["go","goes","went","going"],1],
+["choice","Last summer we ___ in Almaty.","Прошлым летом мы ___ в Алматы.",["stay","stayed","stays","staying"],1],
+["match","Match the time expression with the tense:","Соедините выражение времени с правильным временем:",["every morning","two days ago"],["Past Simple","Present Simple"],[1,0]],
+["build","Build the correct sentence:","Составьте правильное предложение:",["usually","at 8","gets up","He"],["He","usually","gets up","at 8"]],
+["choice","Which question is in the Past Simple?","Какой вопрос стоит в Past Simple?",["Do you work here?","Did you work here?","Does he work here?","Are you working here?"],1],
+["sort","Sort the sentences by tense:","Распределите предложения по временам:",["I watched a film last night.","She reads books every evening."],["Present Simple","Past Simple"],[1,0]],
+["choice","Choose the correct form: She ___ not go yesterday.","Выберите правильную форму: Она ___ не пошла вчера.",["do","does","did","is"],2],
+["build","Build the correct question:","Составьте правильный вопрос:",["you","Did","the museum","visit","?"],["Did","you","visit","the museum","?"]],
+["choice","Which sentence is correct?","Какое предложение правильное?",["He played tennis every day.","He plays tennis every day.","He play tennis yesterday.","He plays tennis yesterday."],1],
+["choice","They ___ to music every evening.","Они ___ музыку каждый вечер.",["listen","listens","listened","listening"],0],
+["choice","I ___ my grandmother last Sunday.","Я ___ свою бабушку в прошлое воскресенье.",["visit","visited","visits","visiting"],1],
+["match","Match the verbs with their Past Simple forms:","Соедините глаголы с их формами Past Simple:",["take","write","make"],["made","took","wrote"],[1,2,0]],
+["build","Build the correct Present Simple question:","Составьте правильный вопрос в Present Simple:",["Does","she","English","speak","?"],["Does","she","speak","English","?"]],
+["choice","Tom ___ his room every Saturday.","Том ___ свою комнату каждую субботу.",["clean","cleans","cleaned","cleaning"],1],
+["choice","We ___ dinner at a restaurant yesterday.","Мы ___ ужин в ресторане вчера.",["have","had","has","having"],1],
+["sort","Sort the sentences by tense:","Распределите предложения по временам:",["I don't like milk.","She didn't call me."],["Present Simple","Past Simple"],[0,1]],
+["choice","___ he usually get up early?","___ он обычно встаёт рано?",["Do","Does","Did","Is"],1],
+["build","Build the correct Past Simple sentence:","Составьте правильное предложение в Past Simple:",["last night","a book","read","I"],["I","read","a book","last night"]],
+["choice","Which time expression belongs to Present Simple?","Какое выражение времени относится к Present Simple?",["last year","yesterday","every weekend","two hours ago"],2]
+]}];
+
+let section=0,index=0,score=0;
+let answers=sections.map(s=>Array(s.count).fill(null));
+let temp={};
+
+function totalDone(){return answers.flat().filter(x=>x!==null).length}
+function updateHome(){
+ const done=totalDone();
+ document.getElementById("score").textContent=score;
+ document.getElementById("homeScore").textContent=score+" / 100 points";
+ document.getElementById("overall").style.width=score+"%";
+ document.getElementById("progressText").textContent=done+" / 50";
+}
+function start(i){
+ section=i; index=0;
+ document.getElementById("home").style.display="none";
+ document.getElementById("result").style.display="none";
+ document.getElementById("game").style.display="block";
+ render();window.scrollTo({top:0,behavior:"smooth"});
+}
+function goHome(){
+ document.getElementById("game").style.display="none";
+ document.getElementById("result").style.display="none";
+ document.getElementById("home").style.display="block";
+ updateHome();window.scrollTo({top:0,behavior:"smooth"});
+}
+function render(){
+ const s=sections[section],q=s.questions[index];
+ temp={build:[],pairs:[],left:null,right:null,sort:null,placed:{},locked:answers[section][index]!==null};
+ document.getElementById("title").textContent=s.title;
+ document.getElementById("meta").textContent=`Question ${index+1} of ${s.count} • 2 points`;
+ document.getElementById("sectionBar").style.width=(index/s.count*100)+"%";
+ let h=`<div class="num">QUESTION ${index+1} / ${s.count}</div><div class="question">${q[1]}</div><div class="translation">🇷🇺 ${q[2]}</div>`;
+ if(q[0]==="choice")h+=`<div class="options">${q[3].map((x,i)=>`<button class="option answer-control" onclick="selectChoice(${i})">${x}</button>`).join("")}</div>`;
+ if(q[0]==="build")h+=`<div class="hint">Tap the words in the correct order. Tap a word again to return it to the word bank.</div><div class="wordbank" id="bank"></div><div class="sentence" id="sentence"></div><div class="move-note">💡 You can tap any selected word to remove it and choose again.</div>`;
+ if(q[0]==="match")h+=`<div class="hint">Tap one item on the left, then one item on the right. A line will appear between them. Tap an item again to change the connection.</div><div class="match-status" id="matchStatus">Choose an item on the left</div><div class="match-wrap" id="matchWrap"><svg class="match-svg" id="matchSvg"></svg><div class="match"><div class="col">${q[3].map((x,i)=>`<button class="item answer-control" id="left${i}" data-side="left" data-i="${i}" onclick="selectMatch(this)">${x}</button>`).join("")}</div><div class="col">${q[4].map((x,i)=>`<button class="item answer-control" id="right${i}" data-side="right" data-i="${i}" onclick="selectMatch(this)">${x}</button>`).join("")}</div></div></div><div class="move-note">💡 Before checking, you can change any connection.</div>`;
+ if(q[0]==="sort")h+=`<div class="hint">Tap a sentence, then tap a category. Tap a placed answer to return it and choose again.</div><div class="wordbank" id="sortbank">${q[3].map((x,i)=>`<button class="word answer-control" id="source${i}" onclick="selectSort(${i})">${x}</button>`).join("")}</div><div class="buckets">${q[4].map((x,i)=>`<div class="bucket answer-control" onclick="placeSort(${i})"><h3>${x}</h3><div id="bucket${i}"></div></div>`).join("")}</div><div class="move-note">💡 Tap a placed answer to return it to the original list. Then you can place it again.</div>`;
+ const already=answers[section][index]!==null;
+ h+=`<div class="feedback" id="feedback"></div><div class="actions"><button class="btn primary" id="checkBtn" onclick="checkAnswer()" ${already?"disabled":""}>Check Answer ✓</button><button class="btn" id="nextBtn" onclick="nextQuestion()" ${already?"":"disabled"}>Next Question →</button></div>`;
+ document.getElementById("box").innerHTML=h;
+ if(q[0]==="build")renderBuild();
+ if(q[0]==="sort")renderSort();
+ if(q[0]==="match")setTimeout(()=>drawMatchLines(false),0);
+ if(already)showFeedback(answers[section][index]);
+}
+function selectChoice(i){
+ if(temp.locked)return;temp.choice=i;
+ document.querySelectorAll(".option").forEach((b,j)=>b.classList.toggle("selected",j===i));
+}
+function renderBuild(){
+ const q=sections[section].questions[index];
+ const bank=document.getElementById("bank");
+ const sentence=document.getElementById("sentence");
+ if(!bank || !sentence)return;
+
+ bank.innerHTML=q[3].map((x,i)=>{
+   const used=temp.build.includes(i);
+   return `<button class="word answer-control" onclick="addWord(${i})" ${used?'style="opacity:.38" disabled':''}>${x}</button>`;
+ }).join("");
+
+ sentence.innerHTML=temp.build.length
+   ? temp.build.map((j,pos)=>`<button class="word answer-control" onclick="removeWord(${pos})">${q[3][j]} ✕</button>`).join("")
+   : `<span class="hint">Your sentence will appear here…</span>`;
+}
+function addWord(i){
+ if(temp.locked || temp.build.includes(i))return;
+ temp.build.push(i);
+ renderBuild();
+}
+function removeWord(pos){
+ if(temp.locked)return;
+ temp.build.splice(pos,1);
+ renderBuild();
+}
+function selectMatch(el){
+ if(temp.locked)return;
+ const side=el.dataset.side, i=+el.dataset.i;
+
+ if(side==="left"){
+   temp.left=i;
+   temp.right=null;
+   document.querySelectorAll('.item[data-side="left"]').forEach(x=>x.classList.remove("selected"));
+   document.querySelectorAll('.item[data-side="right"]').forEach(x=>x.classList.remove("selected"));
+   el.classList.add("selected");
+   document.getElementById("matchStatus").textContent="Now choose the matching item on the right";
+   drawMatchLines(true);
+   return;
+ }
+
+ // Right item: a left item must be selected first.
+ if(temp.left===null){
+   document.getElementById("matchStatus").textContent="First choose an item on the left";
+   return;
+ }
+
+ const left=temp.left, right=i;
+
+ // One left item can have only one connection; changing it replaces the old line.
+ temp.pairs=temp.pairs.filter(p=>p[0]!==left);
+ // One right item can have only one connection; if it was connected, remove that connection.
+ temp.pairs=temp.pairs.filter(p=>p[1]!==right);
+ temp.pairs.push([left,right]);
+
+ temp.left=null;
+ temp.right=null;
+ document.querySelectorAll(".item").forEach(x=>x.classList.remove("selected"));
+ document.getElementById("matchStatus").textContent=`Connected! ${temp.pairs.length} of ${sections[section].questions[index][3].length} pairs completed.`;
+ drawMatchLines(false);
+}
+
+function drawMatchLines(pending=false){
+ const svg=document.getElementById("matchSvg");
+ const wrap=document.getElementById("matchWrap");
+ if(!svg || !wrap)return;
+ const rect=wrap.getBoundingClientRect();
+ svg.setAttribute("viewBox",`0 0 ${rect.width} ${rect.height}`);
+ svg.innerHTML="";
+
+ const makeLine=(leftIndex,rightIndex,isPending=false)=>{
+   const a=document.getElementById("left"+leftIndex);
+   const b=document.getElementById("right"+rightIndex);
+   if(!a || !b)return;
+   const ar=a.getBoundingClientRect(), br=b.getBoundingClientRect();
+   const x1=ar.right-rect.left, y1=ar.top+ar.height/2-rect.top;
+   const x2=br.left-rect.left, y2=br.top+br.height/2-rect.top;
+   const ns="http://www.w3.org/2000/svg";
+   const line=document.createElementNS(ns,"line");
+   line.setAttribute("x1",x1);line.setAttribute("y1",y1);
+   line.setAttribute("x2",x2);line.setAttribute("y2",y2);
+   line.setAttribute("class",isPending?"match-line pending":"match-line");
+   svg.appendChild(line);
+ };
+
+ temp.pairs.forEach(p=>makeLine(p[0],p[1],false));
+
+ // While choosing the right side, show a short temporary line from selected left item.
+ if(pending && temp.left!==null){
+   const a=document.getElementById("left"+temp.left);
+   if(a){
+     const ar=a.getBoundingClientRect();
+     const x1=ar.right-rect.left, y1=ar.top+ar.height/2-rect.top;
+     const ns="http://www.w3.org/2000/svg";
+     const line=document.createElementNS(ns,"line");
+     line.setAttribute("x1",x1);line.setAttribute("y1",y1);
+     line.setAttribute("x2",rect.width/2);line.setAttribute("y2",y1);
+     line.setAttribute("class","match-line pending");
+     svg.appendChild(line);
+   }
+ }
+}function renderSort(){
+ const q=sections[section].questions[index];
+ const bank=document.getElementById("sortbank");
+ if(!bank)return;
+
+ bank.innerHTML=q[3].map((x,i)=>{
+   const placed=temp.placed[i]!==undefined;
+   return `<button class="word answer-control" id="source${i}" onclick="selectSort(${i})" ${placed?'style="display:none"':''}>${x}</button>`;
+ }).join("");
+
+ q[4].forEach((_,bucket)=>{
+   const target=document.getElementById("bucket"+bucket);
+   if(!target)return;
+   target.innerHTML="";
+   Object.keys(temp.placed).forEach(key=>{
+     const i=+key;
+     if(temp.placed[i]===bucket){
+       target.insertAdjacentHTML("beforeend",
+         `<button class="item placed answer-control" id="placed${i}" onclick="event.stopPropagation();returnSort(${i})">${q[3][i]} ✕</button>`);
+     }
+   });
+ });
+}
+
+function selectSort(i){
+ if(temp.locked)return;
+ temp.sort=i;
+ document.querySelectorAll("#sortbank .word").forEach((x,j)=>x.classList.toggle("selected",j===i));
+ document.querySelectorAll(".placed").forEach(x=>x.classList.remove("selected"));
+}
+
+function returnSort(i){
+ if(temp.locked)return;
+ // Remove the answer from its current category and return it to the source bank.
+ delete temp.placed[i];
+ temp.sort=null;
+ renderSort();
+}
+
+function placeSort(bucket){
+ if(temp.locked || temp.sort===null)return;
+ const i=temp.sort;
+ // Move selected answer to the chosen category. It can be moved again before checking.
+ temp.placed[i]=bucket;
+ temp.sort=null;
+ renderSort();
+}
+function evaluate(){
+ const q=sections[section].questions[index];
+ if(q[0]==="choice")return temp.choice===q[4];
+ if(q[0]==="build")return temp.build.length===q[4].length&&temp.build.every((x,i)=>q[3][x].toLowerCase()===q[4][i].toLowerCase());
+ if(q[0]==="match")return q[5].every((v,i)=>temp.pairs.some(p=>p[0]===i&&p[1]===v));
+ if(q[0]==="sort")return q[5].every((v,i)=>temp.placed[i]===v);
+ return false;
+}
+function showFeedback(ok){
+ const f=document.getElementById("feedback");f.className="feedback "+(ok?"good":"bad");
+ f.textContent=ok?"🎉 +2 POINTS! Correct answer!":"❌ 0 POINTS. Incorrect answer. You cannot retake this question.";
+ document.getElementById("nextBtn").disabled=false;
+}
+function checkAnswer(){
+ if(temp.locked||answers[section][index]!==null)return;
+ const ok=evaluate();answers[section][index]=ok;temp.locked=true;
+ if(ok)score+=2;
+ // Disable only answer controls. Home and navigation always remain active.
+ document.querySelectorAll(".answer-control").forEach(el=>el.disabled=true);
+ document.getElementById("checkBtn").disabled=true;
+ showFeedback(ok);updateHome();
+}
+function nextQuestion(){
+ if(document.getElementById("game").style.display==="none")return;
+ const s=sections[section];if(answers[section][index]===null)return;
+ if(index<s.count-1){index++;render();window.scrollTo({top:0,behavior:"smooth"});}
+ else if(section<sections.length-1){start(section+1);}
+ else finishGame();
+}
+function finishIfDone(){
+ if(totalDone()===50)finishGame();
+ else alert("Complete all questions first. You have completed "+totalDone()+" of 50.");
+}
+function finishGame(){
+ document.getElementById("game").style.display="none";document.getElementById("home").style.display="none";document.getElementById("result").style.display="block";
+ document.getElementById("final").textContent=score;
+ document.getElementById("grade").textContent=score>=90?"🥇 EXCELLENT!":score>=75?"🌟 VERY GOOD!":score>=50?"👍 GOOD!":"📚 KEEP PRACTICING!";
+ document.getElementById("resultText").textContent=`Final result: ${score} out of 100 points.`;
+ updateHome();window.scrollTo({top:0,behavior:"smooth"});
+}
+function restart(){score=0;answers=sections.map(s=>Array(s.count).fill(null));updateHome();goHome()}
+function refreshResponsiveMatchLines(){
+ const q=sections[section]?.questions[index];
+ if(q && q[0]==="match")setTimeout(()=>drawMatchLines(false),80);
+}
+window.addEventListener("resize",refreshResponsiveMatchLines);
+window.addEventListener("orientationchange",refreshResponsiveMatchLines);
+if(window.visualViewport)window.visualViewport.addEventListener("resize",refreshResponsiveMatchLines);
+updateHome();
+</script>
+</body>
+</html>
